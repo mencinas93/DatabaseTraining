@@ -1,0 +1,219 @@
+CREATE TYPE movie AS (
+    title       CHARACTER VARYING(100),
+    description CHARACTER VARYING(500),
+    time        INTEGER
+);
+
+CREATE table movie (
+	film_ID serial primary key,
+    title       CHARACTER VARYING(100),
+    description CHARACTER VARYING(500),
+    time        INTEGER
+);
+
+
+CREATE OR REPLACE FUNCTION rating(movie)
+RETURNS DECIMAL(2, 1) AS $$
+    -- Replace this with your actual rating calculation logic
+    SELECT 0.0;
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION rating(movie_table)
+RETURNS DECIMAL(2, 1) AS $$
+    -- Replace this with your actual rating calculation logic
+    SELECT 0.0;
+$$ LANGUAGE SQL;
+
+CREATE TYPE dvd of movie  (
+    extra_features CHARACTER(100) ARRAY[10]
+);
+
+CREATE TYPE dvd AS (
+    title CHARACTER VARYING(100),
+    description CHARACTER VARYING(500),
+    time INTEGER,
+    extra_features CHARACTER(100) ARRAY[10]
+);
+
+CREATE TYPE name AS (
+ first CHARACTER VARYING(100),
+ last  CHARACTER VARYING(100));
+ 
+ 
+ALTER TABLE movie RENAME TO movie_table;
+ 
+CREATE TYPE player AS (
+    player_name name,
+    role CHARACTER VARYING(100),
+    film_id smallint,
+    CONSTRAINT FK_Film_ID FOREIGN KEY (film_id) REFERENCES movie_table(film_id)
+);
+
+DROP FUNCTION IF EXISTS rating(movie) CASCADE;
+
+DROP TYPE IF EXISTS movie CASCADE;
+
+DROP TABLE IF EXISTS movie CASCADE;
+
+CREATE TABLE Show (
+   Name varchar PRIMARY KEY,
+   Producer varchar,
+   FirstYear int,
+   LastYear int);
+   
+
+CREATE TABLE ShowDirector (
+   Name varchar,
+   Director varchar,
+   PRIMARY KEY (Name,Director),
+   FOREIGN KEY (Name) REFERENCES Show(Name)
+);
+   
+CREATE TABLE Actor (
+   Name varchar PRIMARY KEY,
+   Agent varchar,
+   Age int);
+
+CREATE TABLE Episode (
+  Title varchar PRIMARY KEY,
+  Date timestamp,
+  Channel varchar,
+  Ratings int,
+  Name varchar,
+	FOREIGN KEY (Name) REFERENCES Show(Name)
+);
+  
+
+CREATE TABLE Appears (
+ Show_name varchar,
+ Actor_name varchar, 
+ Salary int,
+ PRIMARY KEY (Show_name,Actor_name),
+	foreign key (Show_name) references Show(Name),
+	foreign key(Actor_name) references Actor(Name)
+);
+
+
+CREATE TYPE Episode_type AS (
+   Title varchar,
+   Date  timestamp,
+   Channel varchar,
+   Ratings int);
+   
+   
+ 
+CREATE TYPE Actor_type AS (
+   Name varchar,
+   Agent varchar,
+   Age int);
+
+CREATE TYPE Showtime AS (
+   Name varchar,
+   Producer varchar,
+   FirstYear int,
+   LastYear int,
+   Directors varchar[], /* Directors varchar ARRAY */
+   Episodes Episode[], /* Episodes Episode ARRAY */
+   Actors Actor[],  /* Actors Actor ARRAY */
+	Salary money[]
+); 
+
+CREATE TABLE Showtime (
+   Name varchar,
+   Producer varchar,
+   FirstYear int,
+   LastYear int,
+   Directors varchar[],
+   Episodes Episode[],
+   Actors Actor[],
+   Salary money[]
+);
+
+CREATE TABLE Showtime1 (
+   Name varchar,
+   Producer varchar,
+   FirstYear int,
+   LastYear int,
+   Directors varchar[],
+   Episodes Episode[],
+   Actors Actor[],
+   Salary money[]
+);
+
+CREATE TABLE Showtime2 (
+   Name varchar,
+   Producer varchar,
+   FirstYear int,
+   LastYear int,
+   Directors varchar[],
+   Episodes Episode_type[],
+   Actors Actor_type[],
+   Salary money[]
+);
+
+INSERT INTO Show (Name, Producer, FirstYear, LastYear)
+VALUES
+   ('Game of Thrones', 'HBO', 2011, 2019),
+   ('Breaking Bad', 'AMC', 2008, 2013);
+   
+INSERT INTO ShowDirector (Name, Director)
+VALUES
+   ('Game of Thrones', 'David Benioff'),
+   ('Game of Thrones', 'D.B. Weiss'),
+   ('Breaking Bad', 'Vince Gilligan')
+   
+INSERT INTO Actor (Name, Agent, Age)
+VALUES
+   ('Kit Harington', 'Agent1', 34),
+   ('Bryan Cranston', 'Agent2', 65),
+   ('Emilia Clarke', 'Agent3', 35);
+ 
+ 
+ INSERT INTO Episode (Title, Date, Channel, Ratings, Name)
+VALUES
+   ('Episode 1', '2022-01-01 08:00:00', 'HBO', 9, 'Game of Thrones'),
+   ('Pilot', '2022-02-01 20:00:00', 'AMC', 8, 'Breaking Bad');
+   
+
+INSERT INTO Appears (Show_name, Actor_name, Salary)
+VALUES
+   ('Game of Thrones', 'Kit Harington', 1200000),
+   ('Breaking Bad', 'Bryan Cranston', 700000),
+   ('Game of Thrones', 'Emilia Clarke', 900000);
+   
+  
+INSERT INTO Showtime1 (Name, Producer, FirstYear, LastYear, Directors, Episodes, Actors, Salary)
+VALUES (
+   'Game of Thrones',
+   'HBO',
+   2011,
+   2019,
+   ARRAY['David Benioff', 'D.B. Weiss'],
+   ARRAY[ROW('Episode 1', '2022-01-01 08:00:00', 'HBO', 9)::Episode_type],
+   ARRAY[ROW('Kit Harington', 'Agent1', 34)::Actor_type],
+   ARRAY[100000]
+);
+
+INSERT INTO Showtime2 (Name, Producer, FirstYear, LastYear, Directors, Episodes, Actors, Salary)
+VALUES (
+   'Game of Thrones',
+   'HBO',
+   2011,
+   2019,
+   ARRAY['David Benioff', 'D.B. Weiss'],
+   ARRAY[ROW('Episode 1', '2022-01-01 08:00:00', 'HBO', 9)::Episode_type],
+   ARRAY[ROW('Kit Harington', 'Agent1', 34)::Actor_type],
+   ARRAY[100000]
+);
+
+select * from show
+
+select * from showtime2
+
+
+CREATE TABLE Shows of Showtime;
+
+Select * from Shows
+
+
+Select * from movie
